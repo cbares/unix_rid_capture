@@ -53,8 +53,8 @@ void print_summary(char *dir,FILE *stderr2,struct UAV_RID *RID_data,int records)
   FILE   *log;
 
   sprintf(filename,"%s/summary.txt",dir);
-
-  if (log = fopen(filename,"w")) {
+  log = fopen(filename,"w");
+  if (log) {
     fputs("{\n",log);
   }
 
@@ -193,7 +193,8 @@ int www_export(char *dir,time_t secs,struct UAV_RID *RID_data) {
 
   sprintf(filename,"%s/index.html",dir);
   
-  if (page = fopen(filename,"w")) {
+  page = fopen(filename,"w");
+  if (page) {
 
     for (i = 0; (i < 16)&&(*header1[i]); ++i) {
       fprintf(page,"%s\n",header1[i]);

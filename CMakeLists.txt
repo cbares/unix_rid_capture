@@ -42,8 +42,8 @@ set(batt_volts 0)
 
 configure_file(rid_capture.h.in rid_capture.h)
 
-set(CMAKE_C_FLAGS   "-Wall -Wextra -Wno-parentheses -Wno-deprecated-declarations")
-set(CMAKE_CXX_FLAGS "-Wall -Wextra -Wno-parentheses -Wno-deprecated-declarations")
+set(CMAKE_C_FLAGS   "-Wall -Wextra") # -Wno-parentheses -Wno-deprecated-declarations")
+set(CMAKE_CXX_FLAGS "-Wall -Wextra") # -Wno-parentheses -Wno-deprecated-declarations")
 
 set(processor ${CMAKE_SYSTEM_PROCESSOR})
 message("'${processor}'")
@@ -103,23 +103,26 @@ endif()
 set(rid_capture_source ${rid_capture_source} opendroneid.c)
 set(rid_capture_source ${rid_capture_source} summary.c m_per_deg.c)
 
+# build rid_capture
 add_executable(rid_capture ${rid_capture_source})
 target_include_directories(rid_capture PUBLIC ${PROJECT_BINARY_DIR} ${PROJECT_SOURCE_DIR})
 target_link_libraries(rid_capture ${rcap_libraries})
-#
+
+# build nrf_sniffer
 if(${nrf_sniffer})
   add_executable(nrf_sniffer nrf_sniffer.c)
   target_link_libraries(nrf_sniffer ${base_libraries})
   set_target_properties(nrf_sniffer PROPERTIES COMPILE_FLAGS "-DSTANDALONE=1")
 endif()
-#
+
+# build bluez_sniffer
 if(${bluez_sniffer})
   add_executable(bluez_sniffer bluez_sniffer.c)
   target_link_libraries(bluez_sniffer bluetooth ${base_libraries})
   set_target_properties(bluez_sniffer PROPERTIES COMPILE_FLAGS "-DSTANDALONE=1")
 endif()
-#
+
+# build m_per_deg
 add_executable(m_per_deg m_per_deg.c)
 target_link_libraries(m_per_deg m c)
 set_target_properties(m_per_deg PROPERTIES COMPILE_FLAGS "-DSTANDALONE=1")
-#

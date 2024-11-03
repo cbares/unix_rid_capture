@@ -121,8 +121,8 @@ int fa_export(time_t secs,struct UAV_RID *RID_data) {
     ++next_history;
   }
 #endif
-
-  if (output = fopen(filename,"w")) {
+  output = fopen(filename,"w");
+  if (output) {
 
     chmod(filename,file_mode);
 

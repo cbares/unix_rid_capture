@@ -42,8 +42,8 @@ static int        nrows = 25, ncols = 132;
 void display_init() {
 
 #if USE_CURSES
-
-  if (window = initscr()) {
+  window = initscr();
+  if (window) {
 
     resizeterm(nrows,ncols);
     clear();

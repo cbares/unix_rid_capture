@@ -20,7 +20,7 @@ void calc_m_per_deg(double,double *,double *);
 
 #ifdef STANDALONE
 
-int main(int argc,char *argv[]) {
+int main(int /*argc*/,char */*argv*/[]) {
 
   double lat, m_deg_lat, m_deg_long;
 
