@@ -153,8 +153,9 @@ int main(int argc,char *argv[]) {
 #endif
 
   clock_gettime(CLOCK_REALTIME,&start);
-  
-  if ((user = getpwnam("nobody"))) {
+
+  user = getpwnam("nobody");
+  if (user) {
     nobody  = user->pw_uid; 
     nogroup = user->pw_gid;
   }
@@ -249,7 +250,8 @@ int main(int argc,char *argv[]) {
 
       case 'p':
         if (++i < argc) {
-          if ((j = atoi(argv[i])) > 1023) {
+          j = atoi(argv[i]);
+          if (j > 1023) {
             port = j;
           }
         }
@@ -323,8 +325,8 @@ int main(int argc,char *argv[]) {
   if (enable_udp) {
 
     status = 0;
-
-    if ((json_socket = socket(AF_INET,SOCK_DGRAM,IPPROTO_UDP)) >= 0) {
+    json_socket = socket(AF_INET,SOCK_DGRAM,IPPROTO_UDP);
+    if (json_socket >= 0) {
 
       memset(&server,0,sizeof(server));
       server.sin_family = AF_INET;
@@ -368,9 +370,8 @@ int main(int argc,char *argv[]) {
   /* This doesn't seem to work. 
    */
   
-  int status;
-
-  if ((status = pcap_can_set_rfmon(session)) != 0) {
+  int status = pcap_can_set_rfmon(session);
+  if (status != 0) {
     fprintf(stderr,"pcap_can_set_rfmon(): cannot set rfmon (%d), aborting\n",status);
     pcap_close(session);
     exit(1);
@@ -399,10 +400,10 @@ int main(int argc,char *argv[]) {
     //if(pcap_set_timeout(session, 500)){
     //    fprintf(stderr,"pcap_set_timeout(): failed!");
     //}
-
-  if ((i = pcap_activate(session))) {
+  i = pcap_activate(session);
+  if (i) {
     fprintf(stderr,"\npcap_activate():  %s, %s\n",
-            pcap_geterr(session),pcap_strerror(i));
+            pcap_geterr(session), pcap_strerror(i));
     fputs("This error may mean that you don\'t have permission to access your wifi hardware or that it is not capable of being put into monitor mode.\n",stderr);
 
     if (set_monitor) {

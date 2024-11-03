@@ -21,7 +21,7 @@ set(nrf_sniffer 0)
 set(enable_pcap 1)
 # Handle French beacon IDs.
 set(id_france 1)
-# Create a FlightAware aircraft.json output file.
+# Create a FlightAware aircraft.json output file every 2.
 set(fa_export 3)
 #
 set(asterix 0)
@@ -42,8 +42,8 @@ set(batt_volts 0)
 
 configure_file(rid_capture.h.in rid_capture.h)
 
-set(CMAKE_C_FLAGS   "-Wall -Wextra") # -Wno-parentheses -Wno-deprecated-declarations")
-set(CMAKE_CXX_FLAGS "-Wall -Wextra") # -Wno-parentheses -Wno-deprecated-declarations")
+set(CMAKE_C_FLAGS   "-Wall -Wextra")
+set(CMAKE_CXX_FLAGS "-Wall -Wextra")
 
 set(processor ${CMAKE_SYSTEM_PROCESSOR})
 message("'${processor}'")
