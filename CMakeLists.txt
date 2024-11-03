@@ -1,8 +1,13 @@
 
 cmake_minimum_required(VERSION 3.13)
 
-project(rid_capture)
-set(VERSION 0.98)
+project(rid_capture VERSION 0.98)
+
+
+if (NOT CMAKE_RUNTIME_OUTPUT_DIRECTORY)
+  # Export executables to "bin" directory
+  set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${PROJECT_SOURCE_DIR}/bin)
+endif()
 
 #
 # Options.
@@ -98,8 +103,8 @@ endif()
 set(rid_capture_source ${rid_capture_source} opendroneid.c)
 set(rid_capture_source ${rid_capture_source} summary.c m_per_deg.c)
 
-add_executable(rid_capture
-  ${rid_capture_source})
+add_executable(rid_capture ${rid_capture_source})
+target_include_directories(rid_capture PUBLIC ${PROJECT_BINARY_DIR} ${PROJECT_SOURCE_DIR})
 target_link_libraries(rid_capture ${rcap_libraries})
 #
 if(${nrf_sniffer})

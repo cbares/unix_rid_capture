@@ -13,7 +13,7 @@
 
 #include "opendroneid.h"
 
-#define VERSION        "${VERSION}"
+#define VERSION        "${PROJECT_VERSION}"
 
 /* Bluetooth LE */
 #define BLUEZ_SNIFFER  ${bluez_sniffer} /* Linux standard Bluetooth stack. */

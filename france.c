@@ -186,18 +186,18 @@ void parse_id_france(uint8_t *mac, uint8_t *payload, struct UAV_RID *RID_data) {
   altitude_msl    = alt.i16;
   height_agl      = height.i16;
   
-  sprintf(text,", \"uav latitude\" : %11.6f, \"uav longitude\" : %11.6f",
+  sprintf(text, ", \"uav latitude\" : %11.6f, \"uav longitude\" : %11.6f",
          latitude,longitude);
   write_json(text);
-  sprintf(text,", \"uav altitude\" : %d, \"uav heading\" : %d",
+  sprintf(text, ", \"uav altitude\" : %d, \"uav height\" : %d, \"uav heading\" : %d",
          altitude_msl, height_agl, heading);
   write_json(text);
-  sprintf(text,", \"uav speed\" : %d",speed);
+  sprintf(text, ", \"uav speed\" : %d",speed);
   write_json(text);
-  sprintf(text,", \"base latitude\" : %11.6f, \"base longitude\" : %11.6f",
-         base_latitude,base_longitude);
+  sprintf(text, ", \"base latitude\" : %11.6f, \"base longitude\" : %11.6f",
+         base_latitude, base_longitude);
   write_json(text);
-  sprintf(text,", \"unix time\" : %lu",secs);
+  sprintf(text, ", \"unix time\" : %lu",secs);
   write_json(text);
 
   display_uav_loc(RID_index + 1,latitude,longitude,altitude_msl,3600);
