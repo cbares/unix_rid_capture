@@ -2,7 +2,7 @@
 
 # IFACE=wlp5s0b1
 # IFACE=wlxb8eca3dec4d4
-IFACE=wlan1
+IFACE=wlx00c0cab149a6
 
 # /bin/systemctl stop NetworkManager.service
 # /bin/systemctl stop wpa_supplicant.service

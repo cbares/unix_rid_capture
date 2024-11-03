@@ -1,0 +1,11 @@
+build/*
+CMakeCache.txt
+CMakeFiles/*
+Makefile
+bluez_sniffer
+cmake_install.cmake
+m_per_deg
+nrf_sniffer
+rid_capture
+rid_capture.h
+

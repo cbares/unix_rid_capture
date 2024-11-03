@@ -15,7 +15,7 @@
  */
 
 #pragma GCC diagnostic warning "-Wunused-variable"
-#pragma GCC diagnostic ignored "-Wunused-but-set-variable" */
+#pragma GCC diagnostic ignored "-Wunused-but-set-variable"
 
 #include <stdlib.h>
 #include <stdio.h>
@@ -24,15 +24,16 @@
 #include "rid_capture.h"
 
 #define ID_SIZE (ODID_ID_SIZE + 1)
+#define FR_ID_SIZE (30 + 1)
 
 /*
  *
  */
 
-void parse_id_france(uint8_t *mac,uint8_t *payload,struct UAV_RID *RID_data) {
+void parse_id_france(uint8_t *mac, uint8_t *payload, struct UAV_RID *RID_data) {
 
   int            RID_index, length, i, j, l, t, altitude_msl, height_agl, speed, heading;
-  char           text[128], operator[ID_SIZE], serial[ID_SIZE];
+  char           text[128], operator[FR_ID_SIZE], serial[FR_ID_SIZE];
   double         latitude, longitude, base_latitude, base_longitude;
   uint8_t       *v;
   time_t         secs;
@@ -49,11 +50,11 @@ void parse_id_france(uint8_t *mac,uint8_t *payload,struct UAV_RID *RID_data) {
   operator[0]   = 0;
   serial[0]     = 0;
 
-  uav_lat.u32   = 
-  uav_long.u32  = 
-  base_lat.u32  =
+  uav_lat.u32   = 0;
+  uav_long.u32  = 0;
+  base_lat.u32  = 0;
   base_long.u32 = 0;
-  alt.u16       =
+  alt.u16       = 0;
   height.u16    = 0;
   
   length        = payload[1] + 2;
@@ -87,21 +88,23 @@ void parse_id_france(uint8_t *mac,uint8_t *payload,struct UAV_RID *RID_data) {
       break;
 
     case  2:
-
-      for (i = 0; (i < l)&&(i < (ID_SIZE - 1)); ++i) {
+    /*
+      for (i = 0; (i < l)&&(i < (FR_ID_SIZE - 1)); ++i) {
         operator[i] = (char) v[i];
+        serial[i] = (char) v[i];
       }
 
       operator[i] = 0;
 
-      sprintf(text,", \"operator\" : \"%s\"",operator);
+      sprintf(text,", \"operator\" : \"%s\", \"uav id\" : \"%s\"", operator, serial);
       write_json(text);
       display_identifier(RID_index + 1,operator);
       break;
-
+    */
+    /* fallthrough */
     case  3:
 
-      for (i = 0; (i < l)&&(i < (ID_SIZE - 1)); ++i) {
+      for (i = 0; (i < l)&&(i < (FR_ID_SIZE - 1)); ++i) {
         serial[i] = (char) v[i];
       }
 
@@ -187,7 +190,7 @@ void parse_id_france(uint8_t *mac,uint8_t *payload,struct UAV_RID *RID_data) {
          latitude,longitude);
   write_json(text);
   sprintf(text,", \"uav altitude\" : %d, \"uav heading\" : %d",
-         altitude_msl,heading);
+         altitude_msl, height_agl, heading);
   write_json(text);
   sprintf(text,", \"uav speed\" : %d",speed);
   write_json(text);

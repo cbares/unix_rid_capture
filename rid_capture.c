@@ -84,7 +84,7 @@ static const char         default_key[]     = "0123456789abcdef",
                           default_server[]  = "127.0.0.1",
                           debug_filename[]  = "debug.txt",
                           device_pi[]       = "wlan1",
-                          device_i686[]     = "wlp5s0b1",
+                          device_i686[]     = "wlx00c0cab149a6",
                           default_log_dir[] = "/tmp/rid_capture",
                           default_www_dir[] = "www",
                           dummy[]           = "";
@@ -94,7 +94,8 @@ static struct UAV_RID     RID_data[MAX_UAVS];
 static struct sockaddr_in server;
 #if ENABLE_PCAP
 static int                header_type = 0;
-static const char        *filter_text = "ether broadcast or ether dst 51:6f:9a:01:00:00 ";
+//static const char        *filter_text = "ether broadcast or ether dst 51:6f:9a:01:00:00 ";
+static const char        *filter_text = "wlan type mgt subtype beacon";
 #endif
 static const char         device_bluez[] = "hci0";
 #if BLUEZ_SNIFFER
@@ -153,7 +154,7 @@ int main(int argc,char *argv[]) {
 
   clock_gettime(CLOCK_REALTIME,&start);
   
-  if (user = getpwnam("nobody")) {
+  if ((user = getpwnam("nobody"))) {
     nobody  = user->pw_uid; 
     nogroup = user->pw_gid;
   }
@@ -178,7 +179,7 @@ int main(int argc,char *argv[]) {
 
   uname(&sys_uname);
   
-  if (!strncmp("i686",sys_uname.machine,4)) {
+  if (!strncmp("x86_64",sys_uname.machine,4)) {
   
     wifi_name = (char *) device_i686;
 
@@ -252,8 +253,7 @@ int main(int argc,char *argv[]) {
             port = j;
           }
         }
-      // No break.
-
+      // fallthrough
       case 'u': /* UDP output. */
         enable_udp = 1;
         break;
@@ -393,8 +393,14 @@ int main(int argc,char *argv[]) {
   }
 
 #endif
+    if(pcap_set_immediate_mode(session, 1)){ // must be set before activation
+        fprintf(stderr,"pcap_set_immediate_mode(): failed!");
+    }
+    //if(pcap_set_timeout(session, 500)){
+    //    fprintf(stderr,"pcap_set_timeout(): failed!");
+    //}
 
-  if (i = pcap_activate(session)) {
+  if ((i = pcap_activate(session))) {
     fprintf(stderr,"\npcap_activate():  %s, %s\n",
             pcap_geterr(session),pcap_strerror(i));
     fputs("This error may mean that you don\'t have permission to access your wifi hardware or that it is not capable of being put into monitor mode.\n",stderr);
@@ -456,10 +462,9 @@ int main(int argc,char *argv[]) {
 
   setup_ms = ((double) setup_done.tv_sec * 1e3 + (double) setup_done.tv_nsec * 1e-6) -
              ((double) start.tv_sec      * 1e3 + (double) start.tv_nsec      * 1e-6);
-  
+
 #if ENABLE_PCAP
   if (header_type != DLT_IEEE802_11_RADIO) {
-
       do {
 
         time(&secs);
@@ -684,10 +689,10 @@ void list_devices(char *errbuf) {
  *
  */
 
-void packet_handler(u_char *args,const struct pcap_pkthdr *header,const u_char *packet) {
+void packet_handler(u_char */*args*/,const struct pcap_pkthdr *header,const u_char *packet) {
 
   int            i, offset = 36, length, typ, len;
-  char           ssid_tmp[32], text[128];
+  char           ssid_tmp[33], text[128];
   u_char        *payload, *val, mac[6];
   u_int16_t     *radiotap_len; 
   static u_char  nan_cluster[6]  = {0x50, 0x6f, 0x9a, 0x01, 0x00, 0xff},
@@ -751,8 +756,6 @@ void packet_handler(u_char *args,const struct pcap_pkthdr *header,const u_char *
                  (val[2] == oui_alliance[2])) {
 #if 0
         write_json("{ \"debug\" : \"Beacon with Alliance OUI\" }\n");
-#else
-        ;
 #endif
       } else if ((typ    == 0xdd)&&
                  (val[0] == 0x6a)&& // French ID
@@ -827,7 +830,7 @@ void packet_handler(u_char *args,const struct pcap_pkthdr *header,const u_char *
  *
  */
 
-void parse_odid(u_char *mac,u_char *payload,int length,int rssi,const char *note,const float *volts) {
+void parse_odid(u_char *mac,u_char *payload,int /*length*/,int rssi,const char *note,const float *volts) {
 
   int                       i, j, RID_index, page, authenticated;
   char                      json[128];
@@ -1108,7 +1111,7 @@ void parse_odid(u_char *mac,u_char *payload,int length,int rssi,const char *note
  *
  */
 
-static void signal_handler(int sig) {
+static void signal_handler(int /*sig*/) {
 
   end_program = 1;
   

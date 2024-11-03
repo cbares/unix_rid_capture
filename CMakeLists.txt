@@ -1,6 +1,3 @@
-#
-#
-#
 
 cmake_minimum_required(VERSION 3.13)
 
@@ -12,23 +9,23 @@ set(VERSION 0.98)
 #
 
 # Use the bluez library.
-set(bluez_sniffer 1)
+set(bluez_sniffer 0)
 # Or use an nRF sniffer.
 set(nrf_sniffer 0)
 # Use the pcap library.
 set(enable_pcap 1)
 # Handle French beacon IDs.
 set(id_france 1)
-# Create a FlightAware aircraft.json output file. 
+# Create a FlightAware aircraft.json output file.
 set(fa_export 3)
 #
 set(asterix 0)
 #
 set(verify 0)
 # Basic text display.
-set(use_curses 0)
+set(use_curses 1)
 # Basic web page.
-set(www_page 0)
+set(www_page 1)
 #
 # BT UUID 0x2bf0
 set(batt_volts 0)
@@ -40,8 +37,8 @@ set(batt_volts 0)
 
 configure_file(rid_capture.h.in rid_capture.h)
 
-set(CMAKE_C_FLAGS   "-Wall -Wno-parentheses -Wno-deprecated-declarations")
-set(CMAKE_CXX_FLAGS "-Wall -Wno-parentheses -Wno-deprecated-declarations")
+set(CMAKE_C_FLAGS   "-Wall -Wextra -Wno-parentheses -Wno-deprecated-declarations")
+set(CMAKE_CXX_FLAGS "-Wall -Wextra -Wno-parentheses -Wno-deprecated-declarations")
 
 set(processor ${CMAKE_SYSTEM_PROCESSOR})
 message("'${processor}'")
@@ -49,7 +46,7 @@ message("'${processor}'")
 # This doesn't work.
 # if("${processor}" STREQUAL "armv71")
 if(batt_volts)
-#  message("enabling fp16")  
+#  message("enabling fp16")
   set(CMAKE_C_FLAGS   "${CMAKE_C_FLAGS} -mfp16-format=ieee")
   set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -mfp16-format=ieee")
 endif()
@@ -105,13 +102,17 @@ add_executable(rid_capture
   ${rid_capture_source})
 target_link_libraries(rid_capture ${rcap_libraries})
 #
-add_executable(nrf_sniffer nrf_sniffer.c)
-target_link_libraries(nrf_sniffer ${base_libraries})
-set_target_properties(nrf_sniffer PROPERTIES COMPILE_FLAGS "-DSTANDALONE=1")
+if(${nrf_sniffer})
+  add_executable(nrf_sniffer nrf_sniffer.c)
+  target_link_libraries(nrf_sniffer ${base_libraries})
+  set_target_properties(nrf_sniffer PROPERTIES COMPILE_FLAGS "-DSTANDALONE=1")
+endif()
 #
-add_executable(bluez_sniffer bluez_sniffer.c)
-target_link_libraries(bluez_sniffer bluetooth ${base_libraries})
-set_target_properties(bluez_sniffer PROPERTIES COMPILE_FLAGS "-DSTANDALONE=1")
+if(${bluez_sniffer})
+  add_executable(bluez_sniffer bluez_sniffer.c)
+  target_link_libraries(bluez_sniffer bluetooth ${base_libraries})
+  set_target_properties(bluez_sniffer PROPERTIES COMPILE_FLAGS "-DSTANDALONE=1")
+endif()
 #
 add_executable(m_per_deg m_per_deg.c)
 target_link_libraries(m_per_deg m c)
