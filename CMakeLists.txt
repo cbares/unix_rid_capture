@@ -14,19 +14,19 @@ endif()
 #
 
 # Use the bluez library.
-set(bluez_sniffer 0)
+set(bluez_sniffer 1)
 # Or use an nRF sniffer.
-set(nrf_sniffer 0)
+set(nrf_sniffer 1)
 # Use the pcap library.
 set(enable_pcap 1)
 # Handle French beacon IDs.
 set(id_france 1)
 # Create a FlightAware aircraft.json output file every 2.
 set(fa_export 3)
-#
+# ?
 set(asterix 0)
-#
-set(verify 0)
+# ?
+set(verify 1)
 # Basic text display.
 set(use_curses 1)
 # Basic web page.
@@ -36,17 +36,13 @@ set(www_page 1)
 set(batt_volts 0)
 #
 
-#
-#
-#
-
 configure_file(rid_capture.h.in rid_capture.h)
 
 set(CMAKE_C_FLAGS   "-Wall -Wextra")
 set(CMAKE_CXX_FLAGS "-Wall -Wextra")
 
 set(processor ${CMAKE_SYSTEM_PROCESSOR})
-message("'${processor}'")
+message("Processor: '${processor}'")
 
 # This doesn't work.
 # if("${processor}" STREQUAL "armv71")

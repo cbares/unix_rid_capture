@@ -53,6 +53,7 @@
 #include <sys/socket.h>
 #include <sys/utsname.h>
 #include <sys/wait.h>
+#include <sys/types.h>
 
 #include <netinet/in.h>
 #include <arpa/inet.h>
@@ -180,7 +181,7 @@ int main(int argc,char *argv[]) {
 
   uname(&sys_uname);
   
-  if (!strncmp("x86_64",sys_uname.machine,4)) {
+  if (!strncmp("x86_64",sys_uname.machine,6)) {
   
     wifi_name = (char *) device_i686;
 

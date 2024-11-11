@@ -29,6 +29,11 @@ The UDP output can be read using netcat, `nc -lu 32001`.
 
 You need a WiFi card/dongle that can be put into monitor mode. If you are using an rtl8812au dongle you will need to build and install a third party driver which is a bit of a palaver. Modify the `monitor.sh` script as required until it is getting the hardware monitoring channel 6.
 
+### install dependencies
+```console
+sudo apt-get install cmake libpcap-dev bluez libncurses-dev
+```
+
 ### Compile rid_capture
 
 Check that the options in `CMakeLists.txt` match what you want, check that any libraries that you need are installed (there is a script that will install the required libraries on Debian systems) and type `cmake .` followed by `make`. It may make things easier later on if you edit the default device name near the top of `rid_capture.c` to match your installation.

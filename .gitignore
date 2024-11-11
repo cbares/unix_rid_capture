@@ -1,5 +1,8 @@
 .vscode/*
+.idea/*
 bin/*
 build/*
+data/*
+www/*
 CMakeFiles/*
 
